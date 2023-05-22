@@ -20,10 +20,8 @@ export default function Login() {
     const handleSingIn = () =>{
         signInWithEmailAndPassword(auth,user, password)
         .then((userCredential) => {
-            console.log('user on');
             const userOn = userCredential.user;
-            console.log(userOn);
-            navigation.navigate('Index', {dataUser: userOn});
+            navigation.navigate('Index', {dataUser: userOn.uid});
           })
           .catch(error => {
             if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email') {

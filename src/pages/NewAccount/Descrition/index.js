@@ -102,25 +102,6 @@ const handleNewUser = async (id) =>{
 Alert.alert("Sucesso!")
 }
 
-const teste = async () => {
-  const unsubscribe = firebase.firestore().collection('users').onSnapshot((snapshot) => {
-    const data = snapshot.docs.map((doc) => {
-      const docData = doc.data();
-      const id = doc.id;
-
-      if (docData.idUser === '123') {
-        return { ...docData, id };
-      } else {
-        return null;
-      }
-    }).filter((item) => item !== null);
-
-    console.log(data);
-  });
-}
-
-
-  teste()
 
   return (
     <SafeAreaView style={styles.container}>

@@ -6,7 +6,7 @@ export const firebaseConfig = {
   projectId: "talent-trace-inter",
   storageBucket: "talent-trace-inter.appspot.com",
   messagingSenderId: "796153284508",
-  appId: "1:796153284508:web:2bff8c60825708c55fea59"
+  appId: "1:796153284508:web:532b4b917a05e8665fea59"
   };
 
 
