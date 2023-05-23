@@ -18,7 +18,7 @@ const Stack = createNativeStackNavigator();
 export default function Routes() {
     return (
         <Stack.Navigator>
-              {/* <Stack.Screen
+               <Stack.Screen
                 name="Welcome"
                 component={Welcome}
                 options={{ headerShown: false }}
@@ -67,7 +67,7 @@ export default function Routes() {
                 name="VideoUser"
                 component={VideoUser}
                 options={{ headerShown: false }}
-            />  */}
+            />  
             <Stack.Screen
                 name="Index"
                 component={Index}
