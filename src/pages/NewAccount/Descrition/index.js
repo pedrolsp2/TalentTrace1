@@ -92,12 +92,12 @@ const handleNewUser = async (id) =>{
     cidade: users.cidade ,
     email: users.email ,
     nome: users.nome ,
-    passou: "asdasd" ,
+    passou: "Joguei dois anos pelo Fortaleza, sou de São Paula então joguei 3 anos no america de Rio Preto" ,
     perna: users.perna ,
     peso: users.peso ,
     posicao: users.posicao ,
     senha: users.senha ,
-    sobre: "asdasdggggggggggg" ,
+    sobre: "Sou uma jovem promesa" ,
   })
 Alert.alert("Sucesso!")
 }

@@ -1,5 +1,7 @@
 import firebase from "firebase/compat/app"
-import "firebase/compat/firestore"  
+import "firebase/compat/auth"  
+import 'firebase/compat/firestore'
+import 'firebase/compat/storage'
 
 const firebaseConfig = {
     apiKey: "AIzaSyADlD6kB-Bgn1kmyp85k_a9ONABbXz0ga8",
@@ -11,11 +13,8 @@ const firebaseConfig = {
 };
 
 if(!firebase.apps.length){
-    console.log("Conectando...")
     firebase.initializeApp(firebaseConfig)
-    console.log("Conectador")
 }
  
 
-
-export default firebase;
+export {firebase};

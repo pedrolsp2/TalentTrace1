@@ -5,51 +5,53 @@ import * as ImagePicker from 'expo-image-picker';
 import { primaryColor, secundaryColor, TerColor, styles } from '../styles.js';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {firebase} from '../../../Configs/firebasestorageconfig.js'
 
 export default function Picture() { 
-  const navigation = useNavigation();
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
-  const openImagePickerAsync = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const pickImage = async () =>{
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing:true,
+      aspect: [4,3],
+      quality: 1
+    });
 
-    if (permissionResult.granted === false) {
-      Alert.alert('Permissão necessária', 'A permissão para acessar a galeria é necessária.');
-      return;
+    const source = {uri: result.uri}
+    setImage(source)
+  }
+
+  const uploadImage = async ()=>{
+    setUploading(true);
+    const response = await fetch(image.uri)
+    const blob = await response.blob();
+    const filename = image.uri.substring(image.uri.lastIndexOf('/')+1)
+    var ref = firebase.storage().ref().child(filename).put(blob)
+    console.log(filename)
+
+    try{
+        await ref;
+    }catch(e){
+        console.log(e)
     }
-
-    const pickerResult = await ImagePicker.launchImageLibraryAsync();
-
-    if (!pickerResult.canceled) {
-      setSelectedImage(pickerResult.assets[0].uri);
-    }
-  };
+    setUploading(false)
+    Alert.alert("Sucesso!!")
+    setImage(null)
+  }
 
     return(
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <View style={styles.info}>
-          <TouchableOpacity onPress={()=>navigation.navigate('DiscritionUser')}> 
-            <Ionicons
-              name='chevron-back-outline'
-              size={52}
-              color={TerColor}
-            />
+        <TouchableOpacity onPress={pickImage}>
+          <Text>Selecione</Text>
+        </TouchableOpacity>
+        <View>
+          {image && <Image source={{uri: image.uri}} style={{width: 300, height: 300}}></Image>}
+          <TouchableOpacity onPress={uploadImage}>
+        <Text>Upload</Text>
           </TouchableOpacity>
-          <Text style={styles.Title}>Para finalizar</Text>
-          <Text style={styles.Text}>Escolha um foto bonita para seu perfil</Text>
         </View>
-        <View style={styles.containerPicture}>
-       {selectedImage && <Image source={{ uri: selectedImage }} style={styles.imageSelect} />}
-        <Button title="Escolher foto" onPress={openImagePickerAsync} />
-        </View>
-          <TouchableOpacity style={styles.Button} onPress={''}> 
-             <Text style={styles.TextButton}>Avançar</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.ButtonSkills} onPress={mostra}> 
-             <Text style={styles.TextButton}>Mostrar</Text>
-          </TouchableOpacity> */}
-      </View>
     </SafeAreaView>
   ); 
 }
