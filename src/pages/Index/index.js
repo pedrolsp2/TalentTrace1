@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, Text, SafeAreaView, ScrollView } from 'react-native';
+import { View, Image, Text, SafeAreaView, ScrollView,TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRoute } from "@react-navigation/native";
 import firebase from "../../Configs/firebaseconfig.js"
@@ -92,13 +92,18 @@ export default function Index() {
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView>
-        <View style={styles.coverContainer}>
-            {imageUrls.coverUri && (
+          <View style={styles.coverContainer}>
+            {imageUrls.coverUri ? (
               <Image source={{ uri: imageUrls.coverUri }} style={styles.cover} />
-            )}
-            {imageUrls.photoUri && (
+            ) : 
+              <View style={styles.skeleton}></View>
+            }
+            {imageUrls.photoUri ? (
               <Image source={{ uri: imageUrls.photoUri }} style={styles.profile} />
-            )}
+            ) : 
+            <View style={styles.skeletonImage}></View>
+          }
+            <TouchableOpacity style={styles.edit}><Ionicons name='create-outline' size={24} color="#1c3f7c"/></TouchableOpacity>
           </View>
           <View style={styles.containerContnet}>
             <Text style={styles.Nome}>
@@ -111,20 +116,77 @@ export default function Index() {
               </Text>
               <View style={styles.icons}>
                 <View style={styles.iconsRow}>
+
                   <Text style={styles.icon}>
                     <Ionicons
-                      name='pin-outline'
-                      size={32}
+                      name='location-outline'
+                      size={24}
                       color="#1C3F7C"
+                      style={styles.iconSkills}
                     />
-                    {userData.cidade}</Text>
-                  <Text style={styles.icon}>@ {userData.altura}</Text>
-                  <Text style={styles.icon}>@ {userData.posicao}</Text>
+                    <Text style={styles.textIcon}> {userData.cidade}</Text>
+
+                    </Text>
+
+                  <Text style={styles.icon}>
+                    <Ionicons
+                      name='body-outline'
+                      size={24}
+                      color="#1C3F7C"
+                      style={styles.iconSkills}
+                    />
+                    <Text style={styles.textIcon}> {userData.altura}</Text>
+
+                    </Text>
+
+                  <Text style={styles.icon}>
+                    <Ionicons
+                      name='flag-outline'
+                      size={24}
+                      color="#1C3F7C"
+                      style={styles.iconSkills}
+                    />
+                    <Text style={styles.textIcon}> {userData.posicao}</Text>
+
+                    </Text>
+
                 </View>
+
                 <View style={styles.iconsRow}>
-                  <Text style={styles.icon}>@ {userData.idade} anos</Text>
-                  <Text style={styles.icon}>@ {userData.peso}kg</Text>
-                  <Text style={styles.icon}>@ {userData.perna}</Text>
+
+                  <Text style={styles.icon}>
+                    <Ionicons
+                      name='person-outline'
+                      size={24}
+                      color="#1C3F7C"
+                      style={styles.iconSkills}
+                    />
+                    <Text style={styles.textIcon}> {userData.idade} anos</Text>
+
+                    </Text>
+
+                  <Text style={styles.icon}>
+                    <Ionicons
+                      name='barbell-outline'
+                      size={24}
+                      color="#1C3F7C"
+                      style={styles.iconSkills}
+                    />
+                    <Text style={styles.textIcon}>  {userData.peso}kg</Text>
+
+                    </Text>
+
+                  <Text style={styles.icon}>
+                    <Ionicons
+                      name='walk-outline'
+                      size={24}
+                      color="#1C3F7C" 
+                      style={styles.iconSkills}
+                    />
+                    <Text style={styles.textIcon}> {userData.perna}</Text>
+
+                    </Text>
+                    
                 </View>
               </View>
               <Text style={styles.label}>

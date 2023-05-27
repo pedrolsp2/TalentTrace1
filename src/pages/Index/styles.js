@@ -12,9 +12,9 @@ export const styles = StyleSheet.create({
     coverContainer:{
         position: 'relative'
     },
-    cover:{
+    cover: {
         width: "100%",
-        height: 200, 
+        height: 200,
         borderBottomRightRadius: 46,
         borderBottomLeftRadius: 46,
     },
@@ -27,6 +27,26 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 8,
         left: 8
+    },
+    edit:{
+        position: 'absolute',
+        bottom: 8,
+        right: 18,
+        backgroundColor: '#fff',
+        width: 35,
+        height: 35,
+        borderRadius: 35,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 4.70244,
+        },
+        shadowRadius: 4.70244,
+        shadowOpacity: 0.19, 
     },
     containerContnet:{
         padding: 12,
@@ -45,34 +65,56 @@ export const styles = StyleSheet.create({
         fontFamily: 'Poppins_700Bold',
     },
     icons:{
-        borderWidth: 1,
-        borderColor: 'red',
         width: '100%',
         flexDirection: 'column',
-        padding: 4
     },
     iconsRow:{
-        borderWidth: 1,
-        borderColor: 'red',
         width: '100%',
         padding: 4,
         gap: 4,
+        flexDirection: 'row', 
+    },
+    icon:{ 
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-around'
+        width: '33%',
+        height: '100%',
+        padding: 4
     },
-    icon:{
-        borderWidth: 1,
-        borderColor: 'blue',
-        width: '33%',   
-        fontSize: 16,
-        fontFamily: 'Poppins_700Bold',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
+    iconSkills:{
+        marginRight: 8,
+    },
+    textIcon:{ 
+        fontFamily: 'Poppins_400Regular',
+        paddingLeft: 125
     },
     label:{
-        paddingTop: 12
-    }
+        fontFamily: 'Poppins_400Regular', 
+        fontSize:12,
+        paddingTop: 32,
+        color: '#3A3A3A'
+    },
+    textP:{
+        fontFamily: 'Poppins_400Regular', 
+        fontSize:16,
+        paddingBottom: 16,
+    },
+    skeleton:{
+        width: "100%",
+        height: 200, 
+        borderBottomRightRadius: 46,
+        borderBottomLeftRadius: 46,
+        backgroundColor: '#e3e3e3'
+    },
+    skeletonImage:{
+        width: 100,
+        height: 100,
+        borderRadius: 100,
+        borderWidth: 2,
+        borderColor: '#fafafa',
+        position: 'absolute',
+        bottom: 8,
+        left: 8
+    },
 
 })
