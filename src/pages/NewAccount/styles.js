@@ -28,7 +28,14 @@ export const styles = StyleSheet.create({
         width: '100%',
         position: 'relative',
         gap: 12,
-        marginTop: '10%'
+        marginTop: '10%', 
+    },
+    containerInputN:{
+        width: '100%',
+        position: 'relative',
+        gap: 12,
+        marginTop: '20%', 
+        flex: 1
     },
     input:{
         width: '100%',
@@ -94,11 +101,20 @@ export const styles = StyleSheet.create({
     containerPicture:{
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#e3e3e3',
+        marginBottom: 12,
+        marginTop: 12
     },
     imageSelect: {
         width: '100%',
         height: '80%',
         borderRadius: 500,
       },
+      ImageP:{
+         width: '100%',
+          height: '100%',
+          borderRadius: 12
+      }
 })

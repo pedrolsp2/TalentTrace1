@@ -10,24 +10,24 @@ import SkillsUser from '../pages/NewAccount/Skills'
 import DescritionUser from '../pages/NewAccount/Descrition'
 import PictureUser from '../pages/NewAccount/Picture'
 import CoverUser from '../pages/NewAccount/Cover'
-import VideoUser from '../pages/NewAccount/Video'
-
+import InfoUser from '../pages/NewAccount/Info'
+import NewAccount from "../pages/NewAccount";
 
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
     return (
         <Stack.Navigator>
-               {/* <Stack.Screen
+            <Stack.Screen
                 name="Welcome"
                 component={Welcome}
                 options={{ headerShown: false }}
-            /> 
+            />
             <Stack.Screen
                 name="LetsGo"
                 component={LetsGo}
                 options={{ headerShown: false }}
-        />
+            />
             <Stack.Screen
                 name="Login"
                 component={Login}
@@ -52,8 +52,8 @@ export default function Routes() {
                 name="DescritionUser"
                 component={DescritionUser}
                 options={{ headerShown: false }}
-            />  */}
-             <Stack.Screen
+            />
+            <Stack.Screen
                 name="PictureUser"
                 component={PictureUser}
                 options={{ headerShown: false }}
@@ -62,12 +62,17 @@ export default function Routes() {
                 name="CoverUser"
                 component={CoverUser}
                 options={{ headerShown: false }}
+            /> 
+            <Stack.Screen
+                name="InfoUser"
+                component={InfoUser}
+                options={{ headerShown: false }}
             />
             <Stack.Screen
-                name="VideoUser"
-                component={VideoUser}
+                name="NewAccount"
+                component={NewAccount}
                 options={{ headerShown: false }}
-            />  
+            />
             <Stack.Screen
                 name="Index"
                 component={Index}
