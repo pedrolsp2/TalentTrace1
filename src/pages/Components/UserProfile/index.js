@@ -2,25 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Text, SafeAreaView, ScrollView,TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
-import firebase from "../../Configs/firebaseconfig.js"
+import firebase from "../../../Configs/firebaseconfig.js"
 import { styles } from './styles.js';
-import { firebase as fb } from '../../Configs/firebasestorageconfig.js'
+import { firebase as fb } from '../../../Configs/firebasestorageconfig.js'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Index() {
+export default function UserProfile() {
   const route = useRoute();
   const navigation = useNavigation();
   const storage = fb.storage();
   const [idUs, setIdUs] = useState('');
-  const { dataUser } = route.params || {};
+  const dataUser = "6AuRNb1q7aXjKdEwBxMuYOC6xbD2";
+  const [userData, setUserData] = useState(null);
+  const [imageUrls, setImageUrls] = useState({ photoUri: null, coverUri: null });
 
-  const statusUser = () => {
-    return !!dataUser;
-  };
-
-  const IndexHome = () => {
-    const [userData, setUserData] = useState(null);
-    const [imageUrls, setImageUrls] = useState({ photoUri: null, coverUri: null });
+  console.log(route.params)
+  console.log(dataUser)
 
     useEffect(() => {
       AsyncStorage.removeItem('@talenttrace:dataUsers');
@@ -76,6 +73,7 @@ export default function Index() {
               break;
             }
           }
+
           //console.log('URL da foto desejada:', photoUri, 'URL da capa:', coverUri);
 
           setImageUrls({ photoUri, coverUri });
@@ -88,26 +86,6 @@ export default function Index() {
       return () => unsubscribe();
 
     }, [dataUser]);
-
-    if (!userData) {
-      return null;
-    }
-
-    async function handleNewId() {
-      try {    
-        await AsyncStorage.setItem('@talenttrace:idUser', JSON.stringify(idUs));
-        console.log('ID do usuário armazenado: ' + idUs);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    
-    handleNewId();    
-
-    function reload(){
-      AsyncStorage.removeItem('@talenttrace:idUser');
-      navigation.navigate("Login")
-    }
 
     return (
       <SafeAreaView style={styles.container}>
@@ -123,7 +101,7 @@ export default function Index() {
             ) : 
             <View style={styles.skeletonImage}></View>
           }
-            <TouchableOpacity style={styles.edit} onPress={reload} ><Ionicons name='create-outline' size={24} color="#1c3f7c"/></TouchableOpacity>
+            <TouchableOpacity style={styles.edit}><Ionicons name='create-outline' size={24} color="#1c3f7c"/></TouchableOpacity>
           </View>
           <View style={styles.containerContnet}>
             <Text style={styles.Nome}>
@@ -144,7 +122,8 @@ export default function Index() {
                       color="#1C3F7C"
                       style={styles.iconSkills}
                     />
-                    <Text style={styles.textIcon}> {userData.cidade}</Text>
+                    <Text style={styles.textIcon}> {userData.cidade}
+                    </Text>
 
                     </Text>
 
@@ -155,7 +134,9 @@ export default function Index() {
                       color="#1C3F7C"
                       style={styles.iconSkills}
                     />
-                    <Text style={styles.textIcon}> {userData.altura}</Text>
+                    <Text style={styles.textIcon}> 
+                    {userData.altura}
+                    </Text>
 
                     </Text>
 
@@ -166,7 +147,9 @@ export default function Index() {
                       color="#1C3F7C"
                       style={styles.iconSkills}
                     />
-                    <Text style={styles.textIcon}> {userData.posicao}</Text>
+                    <Text style={styles.textIcon}> 
+                    {userData.posicao}
+                    </Text>
 
                     </Text>
 
@@ -181,7 +164,9 @@ export default function Index() {
                       color="#1C3F7C"
                       style={styles.iconSkills}
                     />
-                    <Text style={styles.textIcon}> {userData.idade} anos</Text>
+                    <Text style={styles.textIcon}> 
+                    {userData.idade}
+                     anos</Text>
 
                     </Text>
 
@@ -192,7 +177,9 @@ export default function Index() {
                       color="#1C3F7C"
                       style={styles.iconSkills}
                     />
-                    <Text style={styles.textIcon}>  {userData.peso}kg</Text>
+                    <Text style={styles.textIcon}>  
+                    {userData.peso}
+                    kg</Text>
 
                     </Text>
 
@@ -203,7 +190,9 @@ export default function Index() {
                       color="#1C3F7C" 
                       style={styles.iconSkills}
                     />
-                    <Text style={styles.textIcon}> {userData.perna}</Text>
+                    <Text style={styles.textIcon}>
+                         {userData.perna}
+                    </Text>
 
                     </Text>
                     
@@ -227,17 +216,4 @@ export default function Index() {
       </SafeAreaView>
     )
   }
-
-  const UserOff = () => {
-    return (
-      <SafeAreaView>
-        <Text>Faça o login</Text>
-      </SafeAreaView>
-    )
-  }
-
-  return (
-    <IndexHome />
-  )
-}
 

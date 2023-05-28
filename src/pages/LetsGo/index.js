@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Image, Text, Button, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native"; 
 import {styles} from './styles';
 import Vector1 from '../../../assets/Vector-Soccer.png'; 
 
 export default function LetsGo() { 
-    
-    const navigation = useNavigation();
+    const navigation = useNavigation();     
 
     return(
         <SafeAreaView style={styles.container}>

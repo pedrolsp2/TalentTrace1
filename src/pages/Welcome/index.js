@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, Text, Button, SafeAreaView, ScrollView, PixelRatio, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native"; 
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import Vector3 from '../../../assets/Vector-Cellphone.png';
 
 export default function Welcome() { 
     const navigation = useNavigation(); 
+
     const data = [
         {
           url: Vector1,
@@ -40,8 +41,7 @@ export default function Welcome() {
       const handlePrevious = () => {
         setCurrentIndex((prevIndex) => (prevIndex === 0 ? data.length - 1 : prevIndex - 1));
       };
-    
-      
+          
       return (
         <SafeAreaView style={styles.container}>
             <View style={[styles.containerArrow,{ fontFamily: 'Poppins_400Regular'}]}>
@@ -69,7 +69,7 @@ export default function Welcome() {
                 <Text style={styles.Title}>{title}</Text>
                 <Text style={styles.Text}>{caption}</Text>
             </View>
-            <TouchableOpacity style={styles.Button}onPress={handleNext}>
+            <TouchableOpacity style={styles.Button} onPress={handleNext}>
                 <Text style={styles.TextButton}>
                     {
                      currentIndex >= 2 ? 'Avançar' : 'Próximo'

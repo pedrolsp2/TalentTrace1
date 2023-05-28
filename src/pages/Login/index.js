@@ -21,7 +21,7 @@ export default function Login() {
         signInWithEmailAndPassword(auth,user, password)
         .then((userCredential) => {
             const userOn = userCredential.user;
-            navigation.navigate('Index', {dataUser: userOn.uid});
+            navigation.navigate('TabRouter', { screen: 'Index', params: { dataUser: userOn.uid } });
           })
           .catch(error => {
             if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email') {

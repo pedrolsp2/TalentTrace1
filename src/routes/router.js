@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import Splash from '../pages/Components/Splash'
 import Welcome from '../pages/Welcome'
 import LetsGo from '../pages/LetsGo'
 import Login from "../pages/Login";
-import Index from '../pages/Index';
 import NameUser from '../pages/NewAccount/Name'
 import PasswordUser from '../pages/NewAccount/Password'
 import SkillsUser from '../pages/NewAccount/Skills'
@@ -12,12 +12,18 @@ import PictureUser from '../pages/NewAccount/Picture'
 import CoverUser from '../pages/NewAccount/Cover'
 import InfoUser from '../pages/NewAccount/Info'
 import NewAccount from "../pages/NewAccount";
+import UserProfile from '../pages/Components/UserProfile'
 
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
     return (
         <Stack.Navigator>
+        <Stack.Screen
+            name="Splash"
+            component={Splash}
+            options={{ headerShown: false }}
+        />
             <Stack.Screen
                 name="Welcome"
                 component={Welcome}
@@ -74,9 +80,8 @@ export default function Routes() {
                 options={{ headerShown: false }}
             />
             <Stack.Screen
-                name="Index"
-                component={Index}
-                options={{ headerShown: false }}
+                name="UserProfile"
+                component={UserProfile}
             />
         </Stack.Navigator>
     )
