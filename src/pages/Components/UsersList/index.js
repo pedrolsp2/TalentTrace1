@@ -77,7 +77,7 @@ export function UsersList({ data }) {
         <SafeAreaView style={styles.container}>
             <View style={styles.containerInfo}>
                 <View style={styles.infoUser}>
-                    <TouchableOpacity onPress={()=>navigation.navigate("UserProfile",{ params: { dataUser: data.idUser } })}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("UserProfile", {data: data.idUser})}>
                         <Image
                             source={{ uri: imageUrls.photoUri }}
                             style={styles.cover}

@@ -12,12 +12,9 @@ export default function UserProfile() {
   const navigation = useNavigation();
   const storage = fb.storage();
   const [idUs, setIdUs] = useState('');
-  const dataUser = "6AuRNb1q7aXjKdEwBxMuYOC6xbD2";
+  const dataUser = route.params?.data;
   const [userData, setUserData] = useState(null);
   const [imageUrls, setImageUrls] = useState({ photoUri: null, coverUri: null });
-
-  console.log(route.params)
-  console.log(dataUser)
 
     useEffect(() => {
       AsyncStorage.removeItem('@talenttrace:dataUsers');
@@ -40,7 +37,9 @@ export default function UserProfile() {
           fetchAllImages(data[0]); // Chamada para buscar as imagens passando o usuário como argumento
         }
       });
+
       setIdUs(dataUser)
+      
       const fetchAllImages = async (userData) => {
         try {
           const imagesRef = storage.ref();
@@ -105,7 +104,7 @@ export default function UserProfile() {
           </View>
           <View style={styles.containerContnet}>
             <Text style={styles.Nome}>
-              {userData.nome}
+              {idUs.nome}
             </Text>
 
             <View style={styles.containerInfoPlayer}>
@@ -122,7 +121,7 @@ export default function UserProfile() {
                       color="#1C3F7C"
                       style={styles.iconSkills}
                     />
-                    <Text style={styles.textIcon}> {userData.cidade}
+                    <Text style={styles.textIcon}> {idUs.cidade}
                     </Text>
 
                     </Text>
@@ -135,7 +134,7 @@ export default function UserProfile() {
                       style={styles.iconSkills}
                     />
                     <Text style={styles.textIcon}> 
-                    {userData.altura}
+                    {idUs.altura}
                     </Text>
 
                     </Text>
@@ -148,7 +147,7 @@ export default function UserProfile() {
                       style={styles.iconSkills}
                     />
                     <Text style={styles.textIcon}> 
-                    {userData.posicao}
+                    {idUs.posicao}
                     </Text>
 
                     </Text>
@@ -165,7 +164,7 @@ export default function UserProfile() {
                       style={styles.iconSkills}
                     />
                     <Text style={styles.textIcon}> 
-                    {userData.idade}
+                    {idUs.idade}
                      anos</Text>
 
                     </Text>
@@ -178,7 +177,7 @@ export default function UserProfile() {
                       style={styles.iconSkills}
                     />
                     <Text style={styles.textIcon}>  
-                    {userData.peso}
+                    {idUs.peso}
                     kg</Text>
 
                     </Text>
@@ -191,24 +190,22 @@ export default function UserProfile() {
                       style={styles.iconSkills}
                     />
                     <Text style={styles.textIcon}>
-                         {userData.perna}
+                         {idUs.perna}
                     </Text>
-
-                    </Text>
-                    
+                    </Text>                    
                 </View>
               </View>
               <Text style={styles.label}>
                 Por onde passei
               </Text>
               <Text style={styles.textP}>
-                {userData.passou}
+                {idUs.passou}
               </Text>
               <Text style={styles.label}>
                 Sobre mim
               </Text>
               <Text style={styles.textP}>
-                {userData.sobre}
+                {idUs.sobre}
               </Text>
             </View>
           </View>
