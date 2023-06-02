@@ -4,7 +4,7 @@ import firebase from "../../Configs/firebaseconfig.js"
 import { UsersList } from '../Components/UsersList/index.js';
 
 const Search = () => {
-    const [users, setUsers] = useState([]);
+const [users, setUsers] = useState([]);
 const getUsers = async () => {
     try {
       const snapshot = await firebase.firestore().collection('users').get();
