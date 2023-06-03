@@ -1,35 +1,58 @@
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {View, StyleSheet, FlatList, SafeAreaView, Text} from 'react-native';
 import firebase from "../../Configs/firebaseconfig.js"
-import { UsersList } from '../Components/UsersList/index.js';
+import { FavoriteList } from '../Components/FavoriteList/index.js';
+import { querryId } from '../../utils/storage.js';
 
 const Favorites = () => {
-const [users, setUsers] = useState([]);
-const getUsers = async () => {
-    try {
-      const snapshot = await firebase.firestore().collection('users').get();
-      const users = snapshot.docs.map(doc => doc.data());
-      return users;
-    } catch (error) {
-      console.log('Erro ao buscar os usuários:', error);
-      return [];
-    }
+const [datas, setDatas] = useState('');
+const [myUser, setMyUser] = useState('');
+
+useLayoutEffect(()=>{
+
+  const fetchUserData = async () => {
+    const idUser = await querryId();
+    setMyUser(idUser);
   };
-    getUsers()
-    .then(users => {
-    //console.log('Usuários:', users);
-    setUsers(users)
-    })
+
+  fetchUserData()
     .catch(error => {
-    console.log('Erro ao buscar os usuários:', error);
+      console.log('Erro ao buscar os usuários:', error);
     });
+  fetchFavoritesByUserId(myUser)
+
+  async function fetchFavoritesByUserId(userId) {
+    const favoritesRef = firebase.firestore().collection('favorites');
+    const querySnapshot = await favoritesRef.where('idUser', '==', userId).get();
+    
+    const idUserFavorites = [];
+    querySnapshot.forEach((doc) => {
+      const favorite = doc.data();
+      idUserFavorites.push(favorite.idUserFavorite);
+    });      
+    const data = [];
+
+    for (const userId of idUserFavorites) {
+      const usersRef = firebase.firestore().collection('users');
+      const querySnapshot = await usersRef.where('idUser', '==', userId).get();
+  
+      querySnapshot.forEach((doc) => {
+        const userData = doc.data();
+        data.push(userData);
+      });
+    }
+    setDatas(data)
+    return data;
+  }
+
+},[datas])
 
         return (
             <SafeAreaView>
                 <FlatList
-                  data={users}
+                  data={datas}
                   key={(item)=>String(item.idUser)}
-                  renderItem={({item})=><UsersList data={item}/>}
+                  renderItem={({item})=><FavoriteList data={item}/>}
                   showsVerticalScrollIndicator={false}
                 />
             </SafeAreaView>

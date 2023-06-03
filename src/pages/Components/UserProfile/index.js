@@ -1,113 +1,116 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import React, { useLayoutEffect, useState, useEffect } from 'react';
+import { View, Image, Text, SafeAreaView, ScrollView, TouchableOpacity, Pressable } from 'react-native';
+import { Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import firebase from "../../../Configs/firebaseconfig.js"
 import { styles } from './styles.js';
 import { firebase as fb } from '../../../Configs/firebasestorageconfig.js'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { querryId, saveFavorites, isFavorites, removeFavorites } from '../../../utils/storage';
 
 export default function UserProfile() {
   const route = useRoute();
-  const [like, setLike] = useState(false);
   const navigation = useNavigation();
-  const storage = fb.storage();
   const [idUs, setIdUs] = useState('');
   const dataUser = route.params?.data;
   const [userData, setUserData] = useState(null);
-  const [imageUrls, setImageUrls] = useState({ photoUri: null, coverUri: null });
+  const [myUser, setMyUser] = useState('');
+  const [photoProfile, setPhotoProfile] = useState(null);
+  const [photoCover, setPhotoCover] = useState(null);
+  const [list, setList] = useState()
+  const [favorite, setFavorite] = useState(false);
 
-  useEffect(() => {
-    AsyncStorage.removeItem('@talenttrace:dataUsers');
+  useLayoutEffect(() => {
+    const fetchUserData = async () => {
+      const idUser = await querryId();
+      setMyUser(idUser);
+    };
+
+    fetchUserData()
+      .catch(error => {
+        console.log('Erro ao buscar os usuários:', error);
+      });
+    async function getStatusFavorites() {
+      const userFavorite = await isFavorites(myUser, dataUser);
+      setFavorite(userFavorite);
+      console.log("status",userFavorite);
+    }
+
+    getStatusFavorites()
+
+    navigation.setOptions({
+      title: 'Detalhes do atleta',
+      headerRight: () => (
+        <Pressable onPress={()=>handleFavorite(myUser, dataUser)}>
+          {favorite ? (
+            <Entypo name="heart" size={28} color={'#ff4141'} />
+          ) : (
+            <Entypo name="heart-outlined" size={28} color={'#ff4141'} />
+          )}
+        </Pressable>
+      )
+    });
+
     const unsubscribe = firebase.firestore().collection('users').onSnapshot((snapshot) => {
-      const data = snapshot.docs
-        .map((doc) => {
-          const docData = doc.data();
-          const id = doc.id;
-
-          if (docData.idUser === dataUser) {
-            return { ...docData, id };
-          } else {
-            return null;
-          }
-        })
-        .filter((item) => item !== null);
+      const data = snapshot.docs.map((doc) => {
+        const docData = doc.data();
+        const id = doc.id;
+        if (docData.idUser === dataUser) {
+          setIdUs(docData.idUser);
+          return { ...docData, id };
+        } else {
+          return null;
+        }
+      }).filter((item) => item !== null);
 
       if (data.length > 0) {
         setUserData(data[0]);
-        fetchAllImages(data[0]); // Chamada para buscar as imagens passando o usuário como argumento
+        getImageUrl(data[0]);
       }
     });
 
-    const fetchAllImages = async (userData) => {
+    const getImageUrl = async (userData) => {
       try {
-        const imagesRef = storage.ref();
-        const imagesSnapshot = await imagesRef.listAll();
-
-        const imageUrls = [];
-
-        for (const imageRef of imagesSnapshot.items) {
-          const downloadUrl = await imageRef.getDownloadURL();
-          imageUrls.push(downloadUrl);
-        }
-
-        const nameCover = userData.capa;
-        let coverUri = null;
-        const namePhoto = userData.foto;
-        let photoUri = null;
-
-        for (const imageUrl of imageUrls) {
-          const imageName = imageUrl.match(/\/o\/(.*?)\?alt/)[1];
-          if (imageName === nameCover) {
-            coverUri = imageUrl;
-            break;
-          }
-        }
-
-        for (const imageUrl of imageUrls) {
-          const imageName = imageUrl.match(/\/o\/(.*?)\?alt/)[1];
-          if (imageName === namePhoto) {
-            photoUri = imageUrl;
-            break;
-          }
-        }
-        setImageUrls({ photoUri, coverUri });
+        const coverRef = fb.ref().child('cover/' + userData.capa);
+        const profileRef = fb.ref().child('profile/' + userData.foto);
+        const coverUrl = await coverRef.getDownloadURL();
+        const profileUrl = await profileRef.getDownloadURL();
+        setPhotoCover(coverUrl);
+        setPhotoProfile(profileUrl);
       } catch (error) {
-        console.log('Erro ao buscar as imagens:', error);
-        setImageUrls({ photoUri: null, coverUri: null });
+       // console.log('Erro ao consultar a imagem:', error);
       }
     };
 
-    setIdUs(userData);
+    async function handleFavorite(id, usId) {
+      console.log(favorite)
+      if (favorite) {
+        await removeFavorites(id, usId);
+        setFavorite(false)
+        setIdUs('');
+      } else {
+        await saveFavorites(id, usId);
+        setFavorite(true)
+        setIdUs('');
+      }
+    }
 
     return () => unsubscribe();
-  }, [dataUser]);
-
-  function handleHeart(){
-    like? setLike(false) : setLike(true)
-  }
+  }, [navigation,dataUser, myUser]);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.coverContainer}>
-          {imageUrls.coverUri ? (
-            <Image source={{ uri: imageUrls.coverUri }} style={styles.cover} />
+          {photoCover ? (
+            <Image source={{ uri: photoCover }} style={styles.cover} />
           ) :
             <View style={styles.skeleton}></View>
           }
-          {imageUrls.photoUri ? (
-            <Image source={{ uri: imageUrls.photoUri }} style={styles.profile} />
+          {photoProfile ? (
+            <Image source={{ uri: photoProfile }} style={styles.profile} />
           ) :
             <View style={styles.skeletonImage}></View>
           }
-          <TouchableOpacity style={styles.edit} onPress={handleHeart}>
-            {like?
-            <AntDesign name="hearto" size={20} color="#1c3f7c" />
-            :
-            <AntDesign name="heart" size={20} color="#1c3f7c" />
-            }
-          </TouchableOpacity>
         </View>
         <View style={styles.containerContnet}>
           <Text style={styles.Nome}>

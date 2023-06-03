@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, SafeAreaView, Text} from 'react-native';
+import {View, FlatList, SafeAreaView, Text} from 'react-native';
 import firebase from "../../Configs/firebaseconfig.js"
 import { UsersList } from '../Components/UsersList/index.js';
 
 const Search = () => {
 const [users, setUsers] = useState([]);
+
 const getUsers = async () => {
     try {
       const snapshot = await firebase.firestore().collection('users').get();
@@ -15,9 +16,9 @@ const getUsers = async () => {
       return [];
     }
   };
+
     getUsers()
     .then(users => {
-    //console.log('Usuários:', users);
     setUsers(users)
     })
     .catch(error => {
@@ -35,7 +36,5 @@ const getUsers = async () => {
             </SafeAreaView>
         );
     }
-
-const styles = StyleSheet.create({})
 
 export default Search;

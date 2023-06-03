@@ -1,19 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, SafeAreaView, Share, Linking } from "react-native";
 import { styles } from './styles';
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { Ionicons, AntDesign, EvilIcons } from '@expo/vector-icons';
 import { firebase as fb } from '../../../Configs/firebasestorageconfig.js'
+import { removeFavorites, querryId } from '../../../utils/storage';
 
-export function UsersList({ data }) {
+export function FavoriteList({data}) {
     const [photoProfile, setPhotoProfile] = useState(null);
+    const [myUser, setMyUser] = useState('');
     const storage = fb.storage();
     const navigation = useNavigation();
 
-    useEffect(() => {
-        getImageUrl(data);
-    }, []);
-
+    useLayoutEffect(() => {
+        const fetchUserData = async () => {
+            const idUser = await querryId();
+            setMyUser(idUser);
+          };
+      
+          fetchUserData()
+            .catch(error => {
+              console.log('Erro ao buscar os usuários:', error);
+            });
+        getImageUrl(data);          
+    }, [data, myUser]);          
+      
     const getImageUrl = async (userData) => {
         try {
 
@@ -27,34 +38,9 @@ export function UsersList({ data }) {
         }
       };
 
-    const onShare = async () => {
-        try {
-        const result = await Share.share({
-            message:
-            'Veja essa jovem promessa que encontrei no Talent Trace!',
-        });
-        if (result.action === Share.sharedAction) {
-            if (result.activityType) {
-            // shared with activity type of result.activityType
-            } else {
-            // shared
-            }
-        } else if (result.action === Share.dismissedAction) {
-            // dismissed
-        }
-        } catch (error) {
-        Alert.alert(error.message);
-        }
-    };    
-
-    const onShareWP = async () => {
-        const phoneNumber = '5534996547587';
-        const message = encodeURIComponent('Olá! Vim pelo TalentTrace! Vamos jogar?!');
-        const url = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
-
-        Linking.openURL(url)
-        .catch(error => console.log(error));
-    }; 
+    function handleTrash(id, idUs){
+        removeFavorites(id, idUs)
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -78,18 +64,10 @@ export function UsersList({ data }) {
                     </View>
                 </View>
                 <View style={styles.shareUser}>
-                    <TouchableOpacity onPress={onShare}>
-                        <Ionicons
-                            name='logo-whatsapp'
-                            size={24}
-                            color="#1C3F7C"
-                            style={styles.iconSkills}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={onShareWP}>
-                        <Ionicons
-                            name='share-social-outline'
-                            size={24}
+                    <TouchableOpacity onPress={()=>handleTrash(myUser, data.idUser)}>
+                        <EvilIcons
+                            name='trash'
+                            size={32}
                             color="#1C3F7C"
                             style={styles.iconSkills}
                         />

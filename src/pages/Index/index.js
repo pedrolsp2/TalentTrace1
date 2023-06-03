@@ -6,13 +6,14 @@ import firebase from "../../Configs/firebaseconfig.js"
 import { styles } from './styles.js';
 import { firebase as fb } from '../../Configs/firebasestorageconfig.js'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { querryId } from '../../utils/storage.js';
 
 export default function Index() {
   const route = useRoute();
   const navigation = useNavigation();
   const storage = fb.storage();
-  const [idUs, setIdUs] = useState('');
-  const { dataUser } = route.params || {};
+  const [idUs, setIdUs] = useState(''); 
+  const [dataUser, setDataUser] = useState({})
 
   const statusUser = () => {
     return !!dataUser;
@@ -20,9 +21,22 @@ export default function Index() {
 
   const IndexHome = () => {
     const [userData, setUserData] = useState(null);
-    const [imageUrls, setImageUrls] = useState({ photoUri: null, coverUri: null });
+    const [photoProfile, setPhotoProfile] = useState(null);
+    const [photoCover, setPhotoCover] = useState(null);
 
     useEffect(() => {
+      const fetchUserData = async () => {
+        const idUser = await querryId();
+        return idUser
+      };
+  
+      fetchUserData()
+      .then(users => {
+        setDataUser(users)
+        })
+        .catch(error => {
+        console.log('Erro ao buscar os usuários:', error);
+        });
       AsyncStorage.removeItem('@talenttrace:dataUsers');
       const unsubscribe = firebase.firestore().collection('users').onSnapshot((snapshot) => {
         const data = snapshot.docs
@@ -40,48 +54,26 @@ export default function Index() {
 
         if (data.length > 0) {
           setUserData(data[0]);
-          fetchAllImages(data[0]); // Chamada para buscar as imagens passando o usuário como argumento
+          getImageUrl(data[0]);
         }
       });
+
       setIdUs(dataUser)
-      const fetchAllImages = async (userData) => {
+
+      const getImageUrl = async (userData) => {
         try {
-          const imagesRef = storage.ref();
-          const imagesSnapshot = await imagesRef.listAll();
 
-          const imageUrls = [];
+          const coverRef = storage.ref().child('cover' + '/' + userData.capa);
+          const profileRef = storage.ref().child('profile' + '/' + userData.foto);
+          const coverUrl = await coverRef.getDownloadURL();
+          const profileUrl = await profileRef.getDownloadURL();
 
-          for (const imageRef of imagesSnapshot.items) {
-            const downloadUrl = await imageRef.getDownloadURL();
-            imageUrls.push(downloadUrl);
-          }
+          setPhotoCover(coverUrl)
+          setPhotoProfile(profileUrl)
 
-          const nameCover = userData.capa;
-          let coverUri = null;
-          const namePhoto = userData.foto;
-          let photoUri = null;
-
-          for (const imageUrl of imageUrls) {
-            const imageName = imageUrl.match(/\/o\/(.*?)\?alt/)[1];
-            if (imageName === nameCover) {
-              coverUri = imageUrl;
-              break;
-            }
-          }
-
-          for (const imageUrl of imageUrls) {
-            const imageName = imageUrl.match(/\/o\/(.*?)\?alt/)[1];
-            if (imageName === namePhoto) {
-              photoUri = imageUrl;
-              break;
-            }
-          }
-          //console.log('URL da foto desejada:', photoUri, 'URL da capa:', coverUri);
-
-          setImageUrls({ photoUri, coverUri });
         } catch (error) {
-          console.log('Erro ao buscar as imagens:', error);
-          setImageUrls({ photoUri: null, coverUri: null });
+          //console.log('Erro ao consultar a imagem:', error);
+          return null;
         }
       };
 
@@ -91,18 +83,7 @@ export default function Index() {
 
     if (!userData) {
       return null;
-    }
-
-    async function handleNewId() {
-      try {    
-        await AsyncStorage.setItem('@talenttrace:idUser', JSON.stringify(idUs));
-        console.log('ID do usuário armazenado: ' + idUs);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    
-    handleNewId();    
+    }  
 
     function reload(){
       AsyncStorage.removeItem('@talenttrace:idUser');
@@ -113,13 +94,13 @@ export default function Index() {
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <View style={styles.coverContainer}>
-            {imageUrls.coverUri ? (
-              <Image source={{ uri: imageUrls.coverUri }} style={styles.cover} />
+            {photoCover ? (
+              <Image source={{ uri: photoCover }} style={styles.cover} />
             ) : 
               <View style={styles.skeleton}></View>
             }
-            {imageUrls.photoUri ? (
-              <Image source={{ uri: imageUrls.photoUri }} style={styles.profile} />
+            {photoProfile ? (
+              <Image source={{ uri: photoProfile }} style={styles.profile} />
             ) : 
             <View style={styles.skeletonImage}></View>
           }

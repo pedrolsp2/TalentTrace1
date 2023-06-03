@@ -44,7 +44,7 @@ export default function Picture() {
     const blob = await response.blob();
     const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1)
     setPictureName(filename)
-     var ref = fb.storage().ref().child(filename).put(blob)
+     var ref = fb.storage().ref().child('cover/' + filename).put(blob)
      try{
          await ref;
      }catch(e){

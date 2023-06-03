@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <StatusBar translucent={true} backgroundColor="rgba(0, 0, 0, 0.51)" barStyle='light-content'/>
+      <StatusBar translucent={true} backgroundColor="rgba(0, 0, 0, 0.51)" barStyle='dark-content'/>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Routes" component={Routes} />
         <Stack.Screen name="TabRouter" component={TabRouter} />

@@ -6,6 +6,7 @@ import {primaryColor, styles} from './styles';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../Configs/firebase-config';
+import {handleNewId} from '../../utils/storage'
 
 export default function Login() { 
     
@@ -21,7 +22,8 @@ export default function Login() {
         signInWithEmailAndPassword(auth,user, password)
         .then((userCredential) => {
             const userOn = userCredential.user;
-            navigation.navigate('TabRouter', { screen: 'Index', params: { dataUser: userOn.uid } });
+            handleNewId(userOn.uid)
+            navigation.navigate('TabRouter', { screen: 'Index'});
           })
           .catch(error => {
             if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email') {
@@ -31,6 +33,7 @@ export default function Login() {
             }
           });
     }
+
 
     return(
         <SafeAreaView style={styles.container}>
