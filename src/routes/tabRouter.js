@@ -1,6 +1,8 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { View } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Index from '../pages/Index';
 import ForYou from '../pages/ForYou';
@@ -10,11 +12,32 @@ import Search from '../pages/Search';
 
 const Tab = createBottomTabNavigator();
 
-export default function TabRouter() {
+const TabRouter = () => {
+  const navigation = useNavigation();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerShown: false,
+        headerShown: route.name === 'NewPost',
+        headerTitle: 'Nova Publicação',
+        headerBackTitleVisible: false,
+        headerStyle: {
+          backgroundColor: '#fafafa',
+        },
+        headerTintColor: '#1A0751',
+        headerLeft: () => {
+          if (route.name === 'NewPost') {
+            return (
+              <TouchableOpacity
+                style={{ marginLeft: 12 }}
+                onPress={() => navigation.goBack()}
+              >
+                <Ionicons name="arrow-back" size={24} color="#1A0751" />
+              </TouchableOpacity>
+            );
+          }
+          return null;
+        },
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarActiveTintColor: "#14AF6C",
@@ -64,4 +87,6 @@ export default function TabRouter() {
       <Tab.Screen name="Index" component={Index} />
     </Tab.Navigator>
   );
-}
+};
+
+export default TabRouter;

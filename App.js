@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar } from 'react-native'; 
+import { StatusBar,Platform } from 'react-native'; 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Routes from './src/routes/router';
@@ -15,9 +15,12 @@ export default function App() {
     Poppins_700Bold
   }) 
 
+  const barStyle = Platform.OS === 'android' ? 'light-content' : 'dark-content';
+
+
   return (
     <NavigationContainer>
-      <StatusBar translucent={true} backgroundColor="rgba(0, 0, 0, 0.51)" barStyle='dark-content'/>
+      <StatusBar translucent={true} backgroundColor="rgba(0, 0, 0, 0.31)" barStyle={barStyle} />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Routes" component={Routes} />
         <Stack.Screen name="TabRouter" component={TabRouter} />

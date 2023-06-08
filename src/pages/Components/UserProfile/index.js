@@ -1,10 +1,10 @@
-import React, { useLayoutEffect, useState, useEffect } from 'react';
-import { View, Image, Text, SafeAreaView, ScrollView, TouchableOpacity, Pressable } from 'react-native';
-import { Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { View, Image, Text, SafeAreaView, ScrollView, TouchableOpacity, Pressable, ActivityIndicator } from 'react-native';
+import { Ionicons, Entypo } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import firebase from "../../../Configs/firebaseconfig.js"
 import { styles } from './styles.js';
-import { firebase as fb } from '../../../Configs/firebasestorageconfig.js'
+import { firebase as fb } from '../../../Configs/firebasestorageconfig.js';
 import { querryId, saveFavorites, isFavorites, removeFavorites } from '../../../utils/storage';
 
 export default function UserProfile() {
@@ -16,8 +16,8 @@ export default function UserProfile() {
   const [myUser, setMyUser] = useState('');
   const [photoProfile, setPhotoProfile] = useState(null);
   const [photoCover, setPhotoCover] = useState(null);
-  const [list, setList] = useState()
   const [favorite, setFavorite] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useLayoutEffect(() => {
     const fetchUserData = async () => {
@@ -29,18 +29,16 @@ export default function UserProfile() {
       .catch(error => {
         console.log('Erro ao buscar os usuários:', error);
       });
-    async function getStatusFavorites() {
+
+    const getStatusFavorites = async () => {
       const userFavorite = await isFavorites(myUser, dataUser);
       setFavorite(userFavorite);
-      console.log("status",userFavorite);
-    }
-
-    getStatusFavorites()
+    };
 
     navigation.setOptions({
       title: 'Detalhes do atleta',
       headerRight: () => (
-        <Pressable onPress={()=>handleFavorite(myUser, dataUser)}>
+        <Pressable onPress={handleFavorite}>
           {favorite ? (
             <Entypo name="heart" size={28} color={'#ff4141'} />
           ) : (
@@ -66,36 +64,52 @@ export default function UserProfile() {
         setUserData(data[0]);
         getImageUrl(data[0]);
       }
+      setLoading(false); // Indicar que o carregamento foi concluído
     });
 
-    const getImageUrl = async (userData) => {
-      try {
-        const coverRef = fb.ref().child('cover/' + userData.capa);
-        const profileRef = fb.ref().child('profile/' + userData.foto);
-        const coverUrl = await coverRef.getDownloadURL();
-        const profileUrl = await profileRef.getDownloadURL();
-        setPhotoCover(coverUrl);
-        setPhotoProfile(profileUrl);
-      } catch (error) {
-       // console.log('Erro ao consultar a imagem:', error);
-      }
+    return () => unsubscribe();
+  }, [navigation, dataUser, myUser, favorite]);
+
+  useEffect(() => {
+    const getStatusFavorites = async () => {
+      const userFavorite = await isFavorites(myUser, dataUser);
+      setFavorite(userFavorite);
+      console.log("status", userFavorite);
     };
 
-    async function handleFavorite(id, usId) {
-      console.log(favorite)
-      if (favorite) {
-        await removeFavorites(id, usId);
-        setFavorite(false)
-        setIdUs('');
-      } else {
-        await saveFavorites(id, usId);
-        setFavorite(true)
-        setIdUs('');
-      }
-    }
+    getStatusFavorites();
+  }, [myUser, dataUser]);
 
-    return () => unsubscribe();
-  }, [navigation,dataUser, myUser]);
+  const getImageUrl = async (userData) => {
+    try {
+      const coverRef = fb.storage().ref().child('cover/' + userData.capa);
+      const profileRef = fb.storage().ref().child('profile/' + userData.foto);
+      const coverUrl = await coverRef.getDownloadURL();
+      const profileUrl = await profileRef.getDownloadURL();
+      setPhotoCover(coverUrl);
+      setPhotoProfile(profileUrl);
+    } catch (error) {
+      console.log('Erro ao consultar a imagem:', error);
+    }
+  };
+
+  const handleFavorite = async () => {
+    if (favorite) {
+      await removeFavorites(myUser, dataUser);
+      setFavorite(false);
+    } else {
+      await saveFavorites(myUser, dataUser);
+      setFavorite(true);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -103,14 +117,14 @@ export default function UserProfile() {
         <View style={styles.coverContainer}>
           {photoCover ? (
             <Image source={{ uri: photoCover }} style={styles.cover} />
-          ) :
+          ) : (
             <View style={styles.skeleton}></View>
-          }
+          )}
           {photoProfile ? (
             <Image source={{ uri: photoProfile }} style={styles.profile} />
-          ) :
+          ) : (
             <View style={styles.skeletonImage}></View>
-          }
+          )}
         </View>
         <View style={styles.containerContnet}>
           <Text style={styles.Nome}>
@@ -123,7 +137,6 @@ export default function UserProfile() {
             </Text>
             <View style={styles.icons}>
               <View style={styles.iconsRow}>
-
                 <Text style={styles.icon}>
                   <Ionicons
                     name='location-outline'
@@ -131,9 +144,7 @@ export default function UserProfile() {
                     color="#1C3F7C"
                     style={styles.iconSkills}
                   />
-                  <Text style={styles.textIcon}> {userData && userData.cidade}
-                  </Text>
-
+                  <Text style={styles.textIcon}> {userData && userData.cidade}</Text>
                 </Text>
 
                 <Text style={styles.icon}>
@@ -143,10 +154,7 @@ export default function UserProfile() {
                     color="#1C3F7C"
                     style={styles.iconSkills}
                   />
-                  <Text style={styles.textIcon}>
-                    {userData && userData.altura}
-                  </Text>
-
+                  <Text style={styles.textIcon}>{userData && userData.altura}</Text>
                 </Text>
 
                 <Text style={styles.icon}>
@@ -156,16 +164,11 @@ export default function UserProfile() {
                     color="#1C3F7C"
                     style={styles.iconSkills}
                   />
-                  <Text style={styles.textIcon}>
-                    {userData && userData.posicao}
-                  </Text>
-
+                  <Text style={styles.textIcon}>{userData && userData.posicao}</Text>
                 </Text>
-
               </View>
 
               <View style={styles.iconsRow}>
-
                 <Text style={styles.icon}>
                   <Ionicons
                     name='person-outline'
@@ -173,10 +176,7 @@ export default function UserProfile() {
                     color="#1C3F7C"
                     style={styles.iconSkills}
                   />
-                  <Text style={styles.textIcon}>
-                    {userData && userData.idade}
-                     anos</Text>
-
+                  <Text style={styles.textIcon}>{userData && userData.idade} anos</Text>
                 </Text>
 
                 <Text style={styles.icon}>
@@ -186,10 +186,7 @@ export default function UserProfile() {
                     color="#1C3F7C"
                     style={styles.iconSkills}
                   />
-                  <Text style={styles.textIcon}>
-                    {userData && userData.peso}
-                    kg</Text>
-
+                  <Text style={styles.textIcon}>{userData && userData.peso} kg</Text>
                 </Text>
 
                 <Text style={styles.icon}>
@@ -199,24 +196,14 @@ export default function UserProfile() {
                     color="#1C3F7C"
                     style={styles.iconSkills}
                   />
-                  <Text style={styles.textIcon}>
-                    {userData && userData.perna}
-                  </Text>
+                  <Text style={styles.textIcon}>{userData && userData.perna}</Text>
                 </Text>
               </View>
             </View>
-            <Text style={styles.label}>
-              Por onde passei
-            </Text>
-            <Text style={styles.textP}>
-              {userData && userData.passou}
-            </Text>
-            <Text style={styles.label}>
-              Sobre mim
-            </Text>
-            <Text style={styles.textP}>
-              {userData && userData.sobre}
-            </Text>
+            <Text style={styles.label}>Por onde passei</Text>
+            <Text style={styles.textP}>{userData && userData.passou}</Text>
+            <Text style={styles.label}>Sobre mim</Text>
+            <Text style={styles.textP}>{userData && userData.sobre}</Text>
           </View>
         </View>
       </ScrollView>

@@ -70,4 +70,19 @@ export const styles = StyleSheet.create({
         fontFamily: 'Poppins_400Regular',
         paddingLeft: 125
     },
+    VeiwFull:{
+        height: '100%',
+        alignItems: "center",
+        justifyContent: 'center'
+    },  emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+      },
+      emptyText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
 })

@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from "../Configs/firebaseconfig"
+import { Alert } from 'react-native'
 
 export async function handleNewId(id) {
     try {    
@@ -34,6 +35,7 @@ export async function handleNewId(id) {
         idUser: idMyUser,
         idUserFavorite: idUserFavorite
       });
+      Alert.alert("Sucesso!","Adicionado com sucesso")
       return userNew;
     } catch (error) {
       console.log(error);
@@ -70,9 +72,31 @@ export async function handleNewId(id) {
       querySnapshot.forEach((doc) => {
         favoritesRef.doc(doc.id).delete();
       });
-  
-      console.log('Documento(s) excluído(s) com sucesso.');
+        Alert.alert("Sucesso!","Exluido com sucesso")
     } catch (error) {
       console.error('Erro ao excluir o documento:', error);
     }
+  }
+
+  export function List(){
+    return [ 
+      {
+        id: '1', 
+        video: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        name: '@sujeitoprogramador',
+        description: 'Criando o ShortDev do zero com RN',
+       },
+      {
+        id: '2', 
+        video: 'https://images.pexels.com/photos/842711/pexels-photo-842711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        name: '@henriquesilva',
+        description: 'Fala turma, estou aprendendo React Native com sujeito programador',
+       },
+      {
+        id: '3', 
+        video: 'https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        name: '@sujeitoprogramador',
+        description: 'Aprendendo a trabalhar com Drag and Drop no React Native',
+       }
+    ]
   }
