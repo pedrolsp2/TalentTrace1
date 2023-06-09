@@ -28,9 +28,14 @@ import { Platform } from "react-native";
         position: 'absolute',
         zIndex: 99,
         right: 10,
-        bottom: Platform.OS === 'android' ? 220 : 270,
+        bottom: Platform.OS === 'android' ? 200 : 250,
         gap: 12,
         alignItems: 'center'
     },
+    actionsBtn:{
+        textShadowColor: 'rgba(0,0,0, 0.90)',
+        textShadowOffset: {width: -1, height: 1.5},
+        textShadowRadius: 8,
+    }
 
    })

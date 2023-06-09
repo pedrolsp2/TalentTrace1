@@ -51,7 +51,6 @@ export default function Picture() {
          console.log(e)
      }
      setUploading(false)
-     //Alert.alert("Sucesso!!")
      setImage(null)
 
      const updatedData = {

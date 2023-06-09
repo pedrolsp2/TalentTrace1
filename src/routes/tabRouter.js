@@ -1,9 +1,9 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { UserPicture } from '../pages/Components/UserPicture';
 import Index from '../pages/Index';
 import ForYou from '../pages/ForYou';
 import NewPost from '../pages/NewPost';
@@ -40,25 +40,23 @@ const TabRouter = () => {
         },
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: "#14AF6C",
+        tabBarActiveTintColor: '#14AF6C',
         tabBarStyle: {
-          backgroundColor: "#fafafa",
+          backgroundColor: '#fafafa',
           borderTopWidth: 1,
           borderColor: '#fafafa',
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
         },
         tabBarIcon: ({ color, size }) => {
-          let iconComponent;
-
           if (route.name === 'NewPost') {
-            iconComponent = (
+            return (
               <View
                 style={{
                   width: size + 16,
                   height: size + 16,
                   borderRadius: (size + 16) / 2,
-                  backgroundColor: "#14AF6C",
+                  backgroundColor: '#14AF6C',
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -67,16 +65,16 @@ const TabRouter = () => {
               </View>
             );
           } else if (route.name === 'ForYou') {
-            iconComponent = <AntDesign name="videocamera" size={size} color={color} />;
+            return <AntDesign name="videocamera" size={size} color={color} />;
           } else if (route.name === 'Index') {
-            iconComponent = <AntDesign name="user" size={size} color={color} />;
+            return <UserPicture/>;
           } else if (route.name === 'Favorites') {
-            iconComponent = <AntDesign name="hearto" size={size} color={color} />;
+            return <AntDesign name="hearto" size={size} color={color} />;
           } else if (route.name === 'Search') {
-            iconComponent = <AntDesign name="search1" size={size} color={color} />;
+            return <AntDesign name="search1" size={size} color={color} />;
           }
 
-          return iconComponent;
+          return null;
         },
       })}
     >

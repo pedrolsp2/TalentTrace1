@@ -15,6 +15,8 @@ import CoverUser from '../pages/NewAccount/Cover'
 import InfoUser from '../pages/NewAccount/Info'
 import NewAccount from "../pages/NewAccount";
 import UserProfile from '../pages/Components/UserProfile'
+import SucessPost from "../pages/NewPost/SucessPost";
+import { SelectPhoto } from "../pages/NewPost/SelectPhoto";
 
 const Stack = createNativeStackNavigator();
 
@@ -90,6 +92,32 @@ export default function Routes() {
           headerLeft: () => (
             <HeaderBackButton
               onPress={() => navigation.navigate('TabRouter', { screen: 'Search' })}
+              tintColor="#1c3f7c"
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="SelectPhoto"
+        component={SelectPhoto}
+        options={() => ({
+          title: "Novo Post",
+          headerLeft: () => (
+            <HeaderBackButton
+              onPress={() => navigation.navigate('TabRouter', { screen: 'ForYou' })}
+              tintColor="#1c3f7c"
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="SucessPost"
+        component={SucessPost}
+        options={() => ({
+          title: "Novo Post",
+          headerLeft: () => (
+            <HeaderBackButton
+              onPress={() => navigation.navigate('TabRouter', { screen: 'ForYou' })}
               tintColor="#1c3f7c"
             />
           ),
