@@ -6,8 +6,11 @@ import { Platform } from "react-native";
     infoUser:{
         position: 'absolute',
         zIndex: 99,
-        left: 8,
-        padding: 8
+        padding: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        width: '99%'
     },
     idUser:{
         color: '#fff',
@@ -19,20 +22,18 @@ import { Platform } from "react-native";
     },
     infoVideo:{
         color: '#fff',
-        marginRight: 24,
+        marginRight: 54,
         textShadowColor: 'rgba(0,0,0, 0.90)',
         textShadowOffset: {width: -1, height: 1.5},
         textShadowRadius: 8,
     },
-    actions:{
-        position: 'absolute',
-        zIndex: 99,
-        right: 10,
-        bottom: Platform.OS === 'android' ? 200 : 250,
-        gap: 12,
-        alignItems: 'center'
+    nameInfo:{
+        flexDirection: 'row',
+        gap: 8
     },
-    actionsBtn:{
+    datePost:{
+        color: '#e3e3e3',
+        fontFamily: 'Poppins_400Regular',
         textShadowColor: 'rgba(0,0,0, 0.90)',
         textShadowOffset: {width: -1, height: 1.5},
         textShadowRadius: 8,

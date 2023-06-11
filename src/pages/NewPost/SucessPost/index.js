@@ -7,15 +7,29 @@ import firebase from '../../../Configs/firebaseconfig.js';
 import { firebase as fb } from '../../../Configs/firebasestorageconfig.js';
 
 export default function SucessPost() {
-  const [newData, setNewData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const storageP = fb.storage();
   const db = firebase.firestore();
-  const [postUrl, setPostUrl] = useState('');
+  const [newData, setNewData] = useState(null);
   const [photoProfile, setPhotoProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [postUrl, setPostUrl] = useState('');
+  const [date, setDate] = useState('');
+
 
   useEffect(() => {
+    const currentDate = new Date();
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    const formattedDate = currentDate.toLocaleString('pt-BR', options);
+    setDate(formattedDate);
+    console.log(formattedDate)
+
     const fetchUserData = async () => {
       try {
         const userData = await AsyncStorage.getItem('@talenttrace:post');
@@ -54,7 +68,9 @@ export default function SucessPost() {
         nome: newData.nome,
         foto: postUrl,
         descricao: newData.desc,
-        idUser: photoProfile,
+        user: photoProfile,
+        idUser: newData.id,
+        dataPost: date
       });
       navigation.navigate('TabRouter', { screen: 'ForYou' });
     } catch (error) {
