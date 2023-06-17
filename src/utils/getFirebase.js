@@ -49,3 +49,22 @@ export async function getName(idUser){
     return null;
   }
 }
+
+export async function getPost(idUser){
+  try {
+    const snapshot = await firebase.firestore().collection("post")
+      .where("idUser", "==", idUser)
+      .get();
+
+    if (!snapshot.empty) {
+      const primeiroDocumento = snapshot.docs[0].data();
+      
+      return primeiroDocumento;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

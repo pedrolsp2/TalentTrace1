@@ -1,11 +1,10 @@
 import React from 'react';
 import {View, StyleSheet, SafeAreaView, Image, TouchableOpacity, Text} from 'react-native';
 
-export function Publications() {
-    
+export function Publications({data}) {
+    console.log("veioaaaaaaaaaaa",data)
     return (
         <SafeAreaView style={styles.container}>
-            <Text>Sucesso</Text>
         </SafeAreaView>
     );
 } 
@@ -17,6 +16,6 @@ export const styles = StyleSheet.create({
         backgroundColor: '#1A0751',
         alignItems: 'center',
         height: 400,
-        borderRadius: 12
+        borderRadius: 12,
     }
 })
