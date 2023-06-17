@@ -1,41 +1,34 @@
 import React,{ useEffect, useState } from "react";
-import { Image, SafeAreaView, Text, Dimensions, View, TouchableOpacity, Platform } from "react-native";
+import { Image, SafeAreaView, Text, Dimensions, View, Pressable, Platform } from "react-native";
 import { style } from "./style";
+import { useNavigation } from "@react-navigation/native";
 const {height: hScreen} = Dimensions.get('screen')
-import {Ionicons} from '@expo/vector-icons'
 
 export  function FeedList({data, currentItem}){
+    const navigation = useNavigation();
     return(
         <SafeAreaView>
 
-        <View style={[style.infoUser,{
-        bottom: Platform.OS === 'android' ? 80 : 150,}]}>
-            <Text style={style.idUser}>
-                {data?.nome}
-            </Text>
-            <Text numberOfLines={2} style={style.infoVideo}>
-                {data?.descricao}
-            </Text>
-        </View>
-
-        <View style={style.actions}>
-            <Image source={{uri: data?.idUser}}
-            style={{width: Platform.OS === 'android' ? 50 : 65, height: Platform.OS === 'android' ? 50 : 65, borderRadius: Platform.OS === 'android' ? 50 : 65, borderWidth: 2, borderColor: '#fafafa'}}
-            resizeMode="cover"
+        <Pressable
+        onPress={() => navigation.navigate('UserProfile', { data: data.idUser })}
+        style={[style.infoUser,{
+        bottom: Platform.OS === 'android' ? 50 : 70,}]}>
+            <Image source={{uri: data?.user}}
+                style={style.cover}
+                resizeMode="cover"
             />
-            <TouchableOpacity style={style.actionsBtn}>
-                <Ionicons name="heart" size={35} color="#fff"/>
-            </TouchableOpacity>
-            <TouchableOpacity style={style.actionsBtn}>
-                <Ionicons name="chatbubble-ellipses" size={35} color="#fff"/>
-            </TouchableOpacity>
-            <TouchableOpacity style={style.actionsBtn}>
-                <Ionicons name="bookmark" size={35} color="#fff"/>
-            </TouchableOpacity>
-        </View>
+            <View>
+                <Text style={style.idUser}>
+                    {data?.nome}
+                </Text>
+                <Text numberOfLines={2} style={style.infoVideo}>
+                    {data?.descricao}
+                </Text>
+            </View>
+        </Pressable>
 
         <Image source={{uri: data?.foto}}
-        style={{width: '100%', height: hScreen}}
+        style={{width: '100%', height: hScreen-100}}
         resizeMode="cover"
         ></Image>
         </SafeAreaView>

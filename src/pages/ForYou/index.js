@@ -45,12 +45,12 @@ const ForYou = () => {
     <SafeAreaView>
       <FlatList
         data={data}
-        keyExtractor={(item) => String(item.id)}
+        keyExtractor={(item, index) => String(index)}
         renderItem={({ item }) => <FeedList data={item} currentItem={showItem} />}
         showsVerticalScrollIndicator={false}
         onViewableItemsChanged={onViewRef.current}
         snapToAlignment="center"
-        snapToInterval={hScreen}
+        snapToInterval={hScreen-100}
         scrollEventThrottle={150}
         decelerationRate="fast"
         viewabilityConfig={{

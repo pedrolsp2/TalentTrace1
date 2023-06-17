@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HeaderBackButton } from "@react-navigation/elements";
 import { useNavigation } from "@react-navigation/native";
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import Splash from '../pages/Components/Splash'
 import Welcome from '../pages/Welcome'
@@ -87,15 +88,27 @@ export default function Routes() {
       <Stack.Screen
         name="UserProfile"
         component={UserProfile}
-        options={() => ({
-          title: "Perfil do usuário",
-          headerLeft: () => (
-            <HeaderBackButton
-              onPress={() => navigation.navigate('TabRouter', { screen: 'Search' })}
-              tintColor="#1c3f7c"
-            />
-          ),
-        })}
+        options={({ route, navigation }) => {
+          const routeName = getFocusedRouteNameFromRoute(route);
+
+          let destination = 'ForYou'; // Página de destino padrão
+          if (routeName === 'Search') {
+            destination = 'Search';
+          }
+          else{
+            destination = 'ForYou'
+          }
+
+          return {
+            title: 'Perfil do usuário',
+            headerLeft: () => (
+              <HeaderBackButton
+                onPress={() => navigation.navigate('TabRouter', { screen: destination })}
+                tintColor="#1c3f7c"
+              />
+            ),
+          };
+        }}
       />
       <Stack.Screen
         name="SelectPhoto"

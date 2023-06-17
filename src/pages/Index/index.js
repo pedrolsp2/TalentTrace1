@@ -202,6 +202,9 @@ export default function Index() {
               <Text style={styles.textP}>
                 {userData.sobre}
               </Text>
+              <Text style={styles.textP}>
+                {userData.sobre}
+              </Text>
             </View>
           </View>
         </ScrollView>
