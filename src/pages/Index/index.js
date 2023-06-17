@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, Text, SafeAreaView, ScrollView,TouchableOpacity } from 'react-native';
+import { View, Image, Text, SafeAreaView, ScrollView,TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import firebase from "../../Configs/firebaseconfig.js"
@@ -7,13 +7,17 @@ import { styles } from './styles.js';
 import { firebase as fb } from '../../Configs/firebasestorageconfig.js'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { querryId } from '../../utils/storage.js';
+import { Publications } from '../Components/Publications/index.js';
 
 export default function Index() {
   const route = useRoute();
   const navigation = useNavigation();
   const storage = fb.storage();
+  const db = firebase.firestore();
   const [idUs, setIdUs] = useState(''); 
   const [dataUser, setDataUser] = useState({})
+  const [documents, setDocuments] = useState([]);
+
 
   const statusUser = () => {
     return !!dataUser;
@@ -57,6 +61,18 @@ export default function Index() {
           getImageUrl(data[0]);
         }
       });
+
+        db.collection('post')
+        .where('idUser', '==', idUs)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            console.log(doc.data()); 
+          });
+        })
+        .catch((error) => {
+          console.log('Erro ao obter os documentos:', error);
+        });
 
       setIdUs(dataUser)
 
@@ -202,9 +218,10 @@ export default function Index() {
               <Text style={styles.textP}>
                 {userData.sobre}
               </Text>
-              <Text style={styles.textP}>
-                {userData.sobre}
+              <Text style={styles.label}>
+                Publicações
               </Text>
+                <Publications/>
             </View>
           </View>
         </ScrollView>
